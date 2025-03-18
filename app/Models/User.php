@@ -11,19 +11,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
-    protected $primaryKey = 'user_id';
-    public $incrementing = true;
-    protected $keyType = 'int';
+    // Remove explicit primary key definition, Laravel will default to 'id'
 
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
-        'class_id',
-        'profile_photo_url',
-        'public_profile',
-        'push_notifications',
-        'role_id',
+        'role',
     ];
 
     protected $hidden = [
