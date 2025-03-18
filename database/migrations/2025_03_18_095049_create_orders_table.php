@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('leaderboards', function (Blueprint $table) {
-        $table->id('leaderboard_id');
-        $table->unsignedBigInteger('class_id');
-        $table->integer('week_number');
-        $table->integer('rank');
-        $table->integer('points');
+        Schema::create('orders', function (Blueprint $table) {
+        $table->id('OrderId');
+        $table->unsignedBigInteger('UserId');
+        $table->string('Status');
+        $table->string('Description')->nullable();
+        $table->dateTime('date');
         $table->timestamps();
 
-        $table->foreign('class_id')->references('class_id')->on('classes');
+        $table->foreign('UserId')->references('UserId')->on('users')->onDelete('cascade');
     });
 
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('leaderboards');
+        Schema::dropIfExists('orders');
     }
 };
