@@ -20,8 +20,8 @@ return new class extends Migration
     $table->dateTime('Datum');
     $table->timestamps();
 
-    $table->foreign('ProductId')->references('ProductId')->on('products')->onDelete('cascade');
-    $table->foreign('UserId')->references('UserId')->on('users')->onDelete('cascade');
+    $table->foreign('ProductId')->references('id')->on('products')->onDelete('cascade');
+    $table->foreign('UserId')->references('id')->on('users')->onDelete('cascade');
 });
 
     }
