@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('welcome'));
@@ -19,4 +20,8 @@ Route::get('/cart', [CheckoutController::class, 'cart'])->name('cart');
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 
 
+Route::get('/', [ProductController::class, 'index']);
+
 require __DIR__.'/auth.php';
+
+
