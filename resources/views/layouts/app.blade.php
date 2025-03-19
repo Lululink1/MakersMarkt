@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="flex items-center">
-            <a href="#" class="relative mr-4">
+            <a href="{{ route('cart') }}" class="relative mr-4">
                 <i class="fas fa-shopping-cart text-xl"></i>
             </a>
             <div class="relative">
@@ -27,6 +27,7 @@
                 </button>
             </div>
         </div>
+
     </nav>
 
     <div class="container mx-auto p-4">
