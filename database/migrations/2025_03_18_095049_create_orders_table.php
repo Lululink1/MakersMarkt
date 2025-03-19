@@ -12,17 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('orders', function (Blueprint $table) {
-    $table->id();
-    $table->unsignedBigInteger('user_id');
-    $table->string('status');
-    $table->string('description')->nullable();
-    $table->dateTime('date');
-    $table->timestamps();
+            $table->id();
 
-    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-});
+            // Relatie met gebruikers
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
+            // Orderinformatie
+            $table->string('status')->default('In behandeling');
+            $table->string('description')->nullable();
+            $table->dateTime('date');
 
+            // Toegevoegde kolommen voor verzend- en betaalmethodes
+            $table->string('shipping_method')->nullable();
+            $table->string('payment_method')->nullable();
+
+            $table->timestamps();
+        });
     }
 
     /**
