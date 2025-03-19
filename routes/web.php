@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // Homepagina
@@ -39,4 +40,8 @@ Route::get('/order/success', function () {
 Route::get('/my-orders', [OrderController::class, 'myOrders'])->middleware('auth')->name('orders.track');
 
 // Auth routes (login, register, etc.)
+Route::get('/', [ProductController::class, 'index']);
+
 require __DIR__.'/auth.php';
+
+
