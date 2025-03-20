@@ -21,6 +21,7 @@ return new class extends Migration
         $table->string('Sustainability');
         $table->decimal('Price', 8, 2);
         $table->integer('Stock');
+        $table->foreignId('category_id')->constrained('categories', 'CategoryId');
         $table->timestamps();
         });
     }
