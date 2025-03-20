@@ -14,16 +14,20 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
-            // Relatie met gebruikers
+            // Koper van de order (klant)
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            // Verkoper / Maker van het product (eigenaar)
+            $table->unsignedBigInteger('seller_id')->nullable(); // <--- NIEUW
+            $table->foreign('seller_id')->references('id')->on('users')->onDelete('cascade');
 
             // Orderinformatie
             $table->string('status')->default('In behandeling');
             $table->string('description')->nullable();
             $table->dateTime('date');
 
-            // Toegevoegde kolommen voor verzend- en betaalmethodes
+            // Verzend- en betaalmethode
             $table->string('shipping_method')->nullable();
             $table->string('payment_method')->nullable();
 

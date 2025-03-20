@@ -9,9 +9,6 @@ use Carbon\Carbon;
 
 class OrderController extends Controller
 {
-    /**
-     * Verwerkt de bestelling.
-     */
     public function process(Request $request)
     {
         // Valideer formuliergegevens
@@ -21,14 +18,14 @@ class OrderController extends Controller
             'house_number' => 'required|string|max:10',
             'city' => 'required|string|max:100',
             'postal_code' => 'required|string|max:20',
-            'shipping' => 'required|string',     // ✅ verzendmethode verplicht
-            'payment' => 'required|string',      // ✅ betaalmethode verplicht
+            'shipping' => 'required|string',
+            'payment' => 'required|string',
         ]);
 
-        // Haal ingelogde gebruiker op
+        // Haal ingelogde gebruiker
         $user = Auth::user();
 
-        // Update gebruikersgegevens indien gewijzigd
+        // Update gebruikersgegevens
         $user->update([
             'email' => $validated['email'],
             'full_name' => $validated['full_name'],
@@ -37,26 +34,36 @@ class OrderController extends Controller
             'postal_code' => $validated['postal_code'],
         ]);
 
-        // Order aanmaken inclusief verzend- en betaalmethode
+        // Haal winkelwageninhoud op
+        $cart = session()->get('cart', []);
+
+        // Beschrijving van items opbouwen
+        $description = '';
+        foreach ($cart as $item) {
+            $description .= $item['name'] . ' x' . $item['quantity'] . '; ';
+        }
+
+        // Order opslaan
         Order::create([
             'user_id' => $user->id,
+            'seller_id' => null, // Optioneel: als je per item sellers hebt
             'status' => 'In behandeling',
-            'description' => 'Bestelling door ' . $user->full_name,
+            'description' => trim($description),
             'shipping_method' => $validated['shipping'],
             'payment_method' => $validated['payment'],
             'date' => Carbon::now(),
         ]);
 
-        // Redirect naar success-pagina
-        return redirect()->route('order.success');
+        // Cart legen
+        session()->forget('cart');
+
+        // Redirect naar successpagina
+        return redirect()->route('order.success')->with('success', 'Je bestelling is geplaatst!');
     }
 
-    /**
-     * Toon overzicht van eigen bestellingen (tracking).
-     */
     public function myOrders()
     {
-        $orders = Order::where('user_id', Auth::id())->latest()->get();
+        $orders = Order::with('user')->where('user_id', Auth::id())->latest()->get();
         return view('orders.track', compact('orders'));
     }
 }

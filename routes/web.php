@@ -6,8 +6,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
-// Homepagina
-Route::get('/', fn() => view('welcome'));
+// Homepagina → toont producten via ProductController@index
+Route::get('/', [ProductController::class, 'index'])->name('home');
 
 // Dashboard (alleen ingelogd + geverifieerd)
 Route::get('/dashboard', fn() => view('dashboard'))->middleware(['auth', 'verified'])->name('dashboard');
@@ -19,16 +19,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Shop pagina
+// Shop pagina (optioneel losse shop-view naast homepage)
 Route::get('/shop', function () {
     return view('shop');
 })->name('shop');
 
-// Winkelwagen & Checkout
+// Winkelwagen routes
 Route::get('/cart', [CheckoutController::class, 'cart'])->name('cart');
-Route::get('/checkout', [CheckoutController::class, 'checkout'])->middleware('auth')->name('checkout');
+Route::post('/cart/add/{id}', [CheckoutController::class, 'addToCart'])->name('cart.add');
+Route::patch('/cart/update/{id}', [CheckoutController::class, 'updateCart'])->name('cart.update');
+Route::delete('/cart/remove/{id}', [CheckoutController::class, 'removeCartItem'])->name('cart.remove');
 
-// Order verwerken
+// Checkout routes
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->middleware('auth')->name('checkout');
 Route::post('/order/process', [OrderController::class, 'process'])->middleware('auth')->name('order.process');
 
 // Bestelling succesvol afgerond
@@ -40,8 +43,4 @@ Route::get('/order/success', function () {
 Route::get('/my-orders', [OrderController::class, 'myOrders'])->middleware('auth')->name('orders.track');
 
 // Auth routes (login, register, etc.)
-Route::get('/', [ProductController::class, 'index']);
-
 require __DIR__.'/auth.php';
-
-
