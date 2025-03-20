@@ -11,16 +11,21 @@ return new class extends Migration
      */
     public function up(): void
     {
-    Schema::create('users', function (Blueprint $table) {
-    $table->id(); // <--- this creates 'id' column
-    $table->string('username');
-    $table->string('password');
-    $table->string('email');
-    $table->string('role');
-    $table->timestamps();
-});
+        Schema::create('users', function (Blueprint $table) {
+            $table->id(); // primaire sleutel
+            $table->string('username');
+            $table->string('password');
+            $table->string('email')->unique();
+            $table->string('role');
 
+            // ➕ Extra profielgegevens voor bestellingen
+            $table->string('full_name')->nullable();
+            $table->string('house_number')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('city')->nullable();
 
+            $table->timestamps();
+        });
     }
 
     /**
