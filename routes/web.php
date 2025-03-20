@@ -5,7 +5,11 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
 
+Route::get('/', function () {
+    return view('homepage');
+});
 // Homepagina → toont producten via ProductController@index
 Route::get('/', [ProductController::class, 'index'])->name('home');
 
@@ -43,4 +47,8 @@ Route::get('/order/success', function () {
 Route::get('/my-orders', [OrderController::class, 'myOrders'])->middleware('auth')->name('orders.track');
 
 // Auth routes (login, register, etc.)
+Route::get('/producten', [ProductController::class, 'index'])->name('producten.index');
+Route::get('/producten/{productId}', [ProductController::class, 'show'])->name('producten.show');
+
+
 require __DIR__.'/auth.php';
