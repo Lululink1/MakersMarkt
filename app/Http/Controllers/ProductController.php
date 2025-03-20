@@ -20,9 +20,9 @@ class ProductController extends Controller
 
         // Voorbeeld van categorieën (je kunt dit later dynamisch maken)
         $categories = [
-            'Elektronica',
-            'Kleding',
-            'Huis & Tuin'
+            'Handmade Crafts & Decor',
+            'Digital & Printable Products',
+            'Eco-Friendly & Sustainable Goods'
         ];
 
         // Stuur de producten en categorieën naar de view
