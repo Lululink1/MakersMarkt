@@ -12,19 +12,22 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-        $table->id();
-        $table->string('ProductId')->unique();
-        $table->string('Name');
-        $table->text('Description');
-        $table->string('Material');
-        $table->dateTime('ProductionTime');
-        $table->string('Sustainability');
-        $table->decimal('Price', 8, 2);
-        $table->integer('Stock');
-        $table->timestamps();
+            $table->id();
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('category')->nullable();
+            $table->json('specifications')->nullable(); // Specificaties als JSON
+            $table->string('material')->nullable();
+            $table->dateTime('production_time')->nullable();
+            $table->string('sustainability')->nullable();
+            $table->decimal('price', 8, 2)->nullable();
+            $table->integer('stock')->default(0);
+            $table->json('images')->nullable(); // Afbeeldingen als JSON array van paden
+            $table->enum('status', ['pending', 'approved', 'rejected', 'pending_update'])->default('pending');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
-
 
     /**
      * Reverse the migrations.

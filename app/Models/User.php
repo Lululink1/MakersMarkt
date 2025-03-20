@@ -3,15 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
-    // Remove explicit primary key definition, Laravel will default to 'id'
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'user_id');
+    }
 
     protected $fillable = [
         'username',
@@ -27,5 +31,6 @@ class User extends Authenticatable
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed', // Voeg de password cast toe
     ];
 }
