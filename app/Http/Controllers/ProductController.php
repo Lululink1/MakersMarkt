@@ -45,7 +45,7 @@ class ProductController extends Controller
         }
 
         $productData = $request->except(['images', 'specifications_text']);
-        $productData['user_id'] = Auth::id(); // Changed to user_id
+        $productData['user_id'] = Auth::id();
 
         if ($request->filled('specifications_text')) {
             $specifications = [];
@@ -79,15 +79,12 @@ class ProductController extends Controller
 
     public function edit(Product $product)
     {
-        if ($product->user_id !== Auth::id()) { // Changed to user_id
-            abort(403, 'Je hebt geen toegang tot dit product.');
-        }
         return view('products.edit', compact('product'));
     }
 
     public function update(Request $request, Product $product)
     {
-        if ($product->user_id !== Auth::id()) { // Changed to user_id
+        if ($product->user_id !== Auth::id()) {
             abort(403, 'Je hebt geen toegang tot dit product.');
         }
 
@@ -146,10 +143,6 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
-        if ($product->user_id !== Auth::id()) { // Changed to user_id
-            abort(403, 'Je hebt geen toegang tot dit product.');
-        }
-
         if ($product->images) {
             foreach ($product->images as $image) {
                 Storage::disk('public')->delete(str_replace('/storage/', '', $image));
