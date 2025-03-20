@@ -42,4 +42,10 @@ class ProductController extends Controller
         ]);
     }
 
+    public function show($productId)
+    {
+        $product = Product::with('category')->where('ProductId', $productId)->firstOrFail();
+        return view('showproduct', ['product' => $product]);
+    }
+
 }
