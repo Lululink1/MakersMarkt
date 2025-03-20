@@ -8,23 +8,42 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Toon de homepage met populaire en nieuwe producten.
+     */
+    public function index()
     {
-        $query = Product::query()->with('category');
+        // Populaire producten (bijvoorbeeld de eerste 3)
+        $popularProducts = Product::limit(3)->get();
 
+        // Nieuwste producten op basis van aanmaakdatum
+        $newProducts = Product::orderBy('created_at', 'desc')->limit(3)->get();
+
+        // Categorieën ophalen (optioneel dynamisch maken met categorie-model)
         $categories = Category::all();
 
-        if ($request->has('category') && $request->category != '') {
-            $query->whereHas('category', function ($query) use ($request) {
-                $query->where('Name', $request->category);
+        return view('welcome', compact('popularProducts', 'newProducts', 'categories'));
+    }
+
+    /**
+     * Toon gefilterde productlijst met zoekfilters.
+     */
+    public function browse(Request $request)
+    {
+        $query = Product::query()->with('category');
+        $categories = Category::all();
+
+        if ($request->filled('category')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('Name', $request->category);
             });
         }
 
-        if ($request->has('material') && !empty($request->material)) {
+        if ($request->filled('material')) {
             $query->whereIn('Material', $request->material);
         }
 
-        if ($request->has('production_time') && $request->production_time != '') {
+        if ($request->filled('production_time')) {
             if ($request->production_time == 'Kort') {
                 $query->where('ProductionTime', '<=', now()->subDays(3));
             } elseif ($request->production_time == 'Gemiddeld') {
@@ -36,48 +55,15 @@ class ProductController extends Controller
 
         $products = $query->get();
 
-        return view('products', [
-            'products' => $products,
-            'categories' => $categories,
-        ]);
+        return view('products', compact('products', 'categories'));
     }
 
+    /**
+     * Toon details van een enkel product.
+     */
     public function show($productId)
     {
         $product = Product::with('category')->where('ProductId', $productId)->firstOrFail();
-        return view('showproduct', ['product' => $product]);
-    }
-
-}
-
-<?php
-
-namespace App\Http\Controllers;
-
-use App\Models\Product;
-use Illuminate\Http\Request;
-
-class ProductController extends Controller
-{
-    /**
-     * Show the product page with popular and new products.
-     */
-    public function index()
-    {
-        // Populaire producten ophalen (de eerste 3)
-        $popularProducts = Product::limit(3)->get();
-
-        // Nieuwe producten ophalen, gesorteerd op creatiedatum (de laatste 3)
-        $newProducts = Product::orderBy('created_at', 'desc')->limit(3)->get();
-
-        // Voorbeeld van categorieën (je kunt dit later dynamisch maken)
-        $categories = [
-            'Elektronica',
-            'Kleding',
-            'Huis & Tuin'
-        ];
-
-        // Stuur de producten en categorieën naar de view
-        return view('welcome', compact('popularProducts', 'newProducts', 'categories'));
+        return view('showproduct', compact('product'));
     }
 }
