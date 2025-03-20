@@ -56,7 +56,7 @@
                             </div>
                             <h3 class="font-semibold mb-1">{{ $product->Name }}</h3>
                             <p class="text-gray-600 text-sm mb-1">€{{ number_format($product->Price, 2, ',', '.') }}</p>
-                            <a href="{{ route('dashboard', $product->ProductId) }}" class="text-blue-500 hover:underline text-sm">Bekijk Details</a>
+                            <a href="" class="text-blue-500 hover:underline text-sm">Bekijk Details</a>
                         </div>
                     @endforeach
                 </div>
